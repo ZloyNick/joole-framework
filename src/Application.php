@@ -2,10 +2,18 @@
 
 declare(strict_types=1);
 
-namespace zloynick\joole_framework;
+namespace joole\framework;
 
-
-class Application
+/**
+ * The Application class is the entry point of a web application.
+ *
+ * It allows you to manage application processes, its components and modules.
+ */
+abstract class Application
 {
+
+    public function __construct(){
+
+    }
 
 }
