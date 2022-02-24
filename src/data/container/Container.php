@@ -10,7 +10,6 @@ use InvalidArgumentException;
 use joole\framework\data\container\object\ContainerObject;
 use ReflectionException;
 use ReflectionClass;
-use ReflectionMethod;
 
 use function is_subclass_of;
 use function count;
@@ -26,7 +25,7 @@ class Container extends BaseContainer
      * @param string $object
      * @param string[] $params
      * @throws ReflectionException
-     * @throws \ErrorException
+     * @throws ErrorException|\joole\framework\data\container\NotFoundException
      */
     public function register(string $object, array $params): void
     {
@@ -44,9 +43,6 @@ class Container extends BaseContainer
 
         // If object hasn't constructor
         try{
-            /**
-             * @var ReflectionMethod $constructor
-             */
             $constructor = $reflectedObject->getMethod('__construct');
             $params = $constructor->getParameters();
 
@@ -92,7 +88,7 @@ class Container extends BaseContainer
      * @param array $params
      * @param string ...$objects
      * @throws ErrorException
-     * @throws ReflectionException
+     * @throws ReflectionException|\joole\framework\data\container\NotFoundException
      */
     public function multiplePush(array $params, string ...$objects): void
     {
