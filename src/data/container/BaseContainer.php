@@ -22,7 +22,7 @@ abstract class BaseContainer implements ContainerInterface
      *     "\My\Example\Class" => object(\My\Example\Class)
      * ]
      */
-    private static array $instances = [];
+    protected static array $instances = [];
 
     /**
      * Returns object of container or throws exception.
@@ -56,12 +56,20 @@ abstract class BaseContainer implements ContainerInterface
     }
 
     /**
-     * Registers objects to container.
+     * Registers object to container.
      *
-     * @param ContainerObject $object
-     * @param ContainerObject[] $params - Classes of registered containers.
+     * @param string $object
+     * @param string[] $params Containers (ids)
      * @return void
      */
-    abstract public function register(ContainerObject $object, ContainerObject... $params): void;
+    abstract public function register(string $object, array $params): void;
+
+    /**
+     * Registers many objects with duplicated containers.
+     *
+     * @param array $params Containers (ids)
+     * @param string ...$objects
+     */
+    abstract public function multiplePush(array $params, string ...$objects): void;
 
 }
