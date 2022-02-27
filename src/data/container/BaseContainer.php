@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace joole\framework\data\container;
 
-use joole\framework\data\container\object\ContainerObject;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -18,7 +17,7 @@ abstract class BaseContainer implements ContainerInterface
     /**
      * Preloaded objects that can be found by the name YourClass::class
      *
-     * @var ContainerObject[] = [
+     * @var array = [
      *     "\My\Example\Class" => object(\My\Example\Class)
      * ]
      */
@@ -28,10 +27,10 @@ abstract class BaseContainer implements ContainerInterface
      * Returns object of container or throws exception.
      *
      * @param string $id
-     * @return ContainerObject
+     * @return object
      * @throws NotFoundException
      */
-    public function get(string $id): ContainerObject
+    public function get(string $id): object
     {
         // Container's objects
         $instances = &static::$instances;
@@ -52,7 +51,7 @@ abstract class BaseContainer implements ContainerInterface
      */
     public function has(string $id): bool
     {
-        return isset(self::$instances);
+        return isset(self::$instances[$id]);
     }
 
     /**
@@ -65,7 +64,7 @@ abstract class BaseContainer implements ContainerInterface
     abstract public function register(string $object, array $params): void;
 
     /**
-     * Registers many objects with duplicated containers.
+     * Registers many objects with duplicated params.
      *
      * @param array $params Containers (ids)
      * @param string ...$objects

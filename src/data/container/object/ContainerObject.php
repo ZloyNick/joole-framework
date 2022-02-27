@@ -9,12 +9,4 @@ namespace joole\framework\data\container\object;
  */
 interface ContainerObject
 {
-
-    /**
-     * Returns name of container.
-     *
-     * @return string
-     */
-    public function getName(): string;
-
 }

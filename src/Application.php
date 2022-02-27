@@ -12,8 +12,7 @@ namespace joole\framework;
 abstract class Application
 {
 
-    public function __construct(){
-
+    public function __construct(array $params){
     }
 
 }

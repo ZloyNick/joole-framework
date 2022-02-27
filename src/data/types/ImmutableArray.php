@@ -6,6 +6,8 @@ namespace joole\framework\data\types;
 
 use ArrayAccess;
 
+use function array_keys;
+
 /**
  * Class ImmutableArray array allows read-only action.
  */
@@ -56,14 +58,12 @@ final class ImmutableArray implements ArrayAccess
     }
 
     /**
-     * Destruct of this object not allowed.
+     * Returns keys of items.
      *
-     * The call is processed before the object is destroyed.
-     *
-     * @throws TypeException
+     * @return array
      */
-    public function __destruct()
+    public function keys(): array
     {
-        throw new TypeException('Unset of immutable array is not allowed.');
+        return array_keys($this->items);
     }
 }

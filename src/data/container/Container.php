@@ -6,12 +6,9 @@ namespace joole\framework\data\container;
 
 use AssertionError;
 use ErrorException;
-use InvalidArgumentException;
-use joole\framework\data\container\object\ContainerObject;
 use ReflectionException;
 use ReflectionClass;
 
-use function is_subclass_of;
 use function count;
 use function call_user_func_array;
 use function is_null;
@@ -27,13 +24,8 @@ class Container extends BaseContainer
      * @throws ReflectionException
      * @throws ErrorException|\joole\framework\data\container\NotFoundException
      */
-    public function register(string $object, array $params): void
+    public function register(string $object, array $params = []): void
     {
-        // Only subclass of ContainerObject can be asserted
-        if (!is_subclass_of($object, $class = ContainerObject::class)) {
-            throw new InvalidArgumentException('Argument 1 must be instance of ' . $class, '!');
-        }
-
         // Twin given
         if ($this->has($object)) {
             throw new AssertionError($object . ' can\'t be asserted to this container! This object already exists.');
@@ -42,7 +34,7 @@ class Container extends BaseContainer
         $reflectedObject = new ReflectionClass($object);
 
         // If object hasn't constructor
-        try{
+        if($reflectedObject->hasMethod('__construct')){
             $constructor = $reflectedObject->getMethod('__construct');
             $params = $constructor->getParameters();
 
@@ -53,31 +45,39 @@ class Container extends BaseContainer
                 $arguments = [];
 
                 foreach ($params as $param){
-                    $class = $param->getDeclaringClass();
+                    /** @var \ReflectionNamedType $class */
+                    $type = $param->getType();
+                    $class = (string)$type->getName();
+                    $paramPos = $param->getPosition();
 
                     // If argument is not class, we will declare argument from params by param name.
-                    if(is_null($class)){
+                    if(!class_exists($class)){
                         $name = $param->getName();
 
                         if(!isset($params[$name])){
+                            if($param->isOptional()){
+                                $arguments[$paramPos] = $param->getDefaultValue();
+
+                                continue;
+                            }
+
                             throw new ErrorException('Param with name '.$name.' doesn\'t exist in $params array!');
                         }
 
-                        $arguments[] = $params[$name];
+                        $arguments[$paramPos] = $params[$name];
                     }else{
-                        $className = $class->getName();
 
-                        if(!$this->has($className)){
-                            throw new ErrorException('Container of class '.$className.' doesn\'t exists!');
+                        if(!$this->has($class)){
+                            throw new ErrorException('Container of class '.$class.' doesn\'t exists!');
                         }
 
-                        $arguments[] = $this->get($className);
+                        $arguments[$paramPos] = $this->get($class);
                     }
                 }
 
-                $builtObject = call_user_func_array([$object, '__construct'], $arguments);
+                $builtObject = $reflectedObject->newInstanceArgs($arguments);
             }
-        }catch(ReflectionException $exception){
+        }else{
             $builtObject = new $object();
         }
 
