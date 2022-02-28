@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace joole\framework\data\types;
 
 use ArrayAccess;
-
 use function array_keys;
 
 /**
@@ -39,22 +38,22 @@ final class ImmutableArray implements ArrayAccess
 
     /**
      * @inheritDoc
-     * @throws TypeException
+     * @throws ImmutableException
      * @deprecated Not needs at this class.
      */
     public function offsetSet($offset, $value)
     {
-        throw new TypeException('Can\'t set value for array: array is an immutable.');
+        throw new ImmutableException('Can\'t set value for array: array is an immutable.');
     }
 
     /**
      * @inheritDoc
-     * @throws TypeException
+     * @throws ImmutableException
      * @deprecated Not needs at this class
      */
     public function offsetUnset($offset)
     {
-        throw new TypeException('Can\'t unset value for array: array is an immutable.');
+        throw new ImmutableException('Can\'t unset value for array: array is an immutable.');
     }
 
     /**

@@ -6,18 +6,30 @@ namespace joole\framework\data\container;
 
 use AssertionError;
 use ErrorException;
-use ReflectionException;
 use ReflectionClass;
-
+use ReflectionException;
+use ReflectionNamedType;
+use function class_exists;
 use function count;
-use function call_user_func_array;
-use function is_null;
 
 /**
  * A container formed from an abstraction.
  */
 class Container extends BaseContainer
 {
+    /**
+     * @param array $params
+     * @param string ...$objects
+     * @throws ErrorException
+     * @throws ReflectionException|\joole\framework\data\container\NotFoundException
+     */
+    public function multiplePush(array $params, string ...$objects): void
+    {
+        foreach ($objects as $object) {
+            $this->register($object, $params);
+        }
+    }
+
     /**
      * @param string $object
      * @param string[] $params
@@ -34,50 +46,11 @@ class Container extends BaseContainer
         $reflectedObject = new ReflectionClass($object);
 
         // If object hasn't constructor
-        if($reflectedObject->hasMethod('__construct')){
-            $constructor = $reflectedObject->getMethod('__construct');
-            $params = $constructor->getParameters();
-
-            // If method has 0 parameters -> empty construct calling
-            if(count($params) === 0){
-                $builtObject = new $object();
-            }else{
-                $arguments = [];
-
-                foreach ($params as $param){
-                    /** @var \ReflectionNamedType $class */
-                    $type = $param->getType();
-                    $class = (string)$type->getName();
-                    $paramPos = $param->getPosition();
-
-                    // If argument is not class, we will declare argument from params by param name.
-                    if(!class_exists($class)){
-                        $name = $param->getName();
-
-                        if(!isset($params[$name])){
-                            if($param->isOptional()){
-                                $arguments[$paramPos] = $param->getDefaultValue();
-
-                                continue;
-                            }
-
-                            throw new ErrorException('Param with name '.$name.' doesn\'t exist in $params array!');
-                        }
-
-                        $arguments[$paramPos] = $params[$name];
-                    }else{
-
-                        if(!$this->has($class)){
-                            throw new ErrorException('Container of class '.$class.' doesn\'t exists!');
-                        }
-
-                        $arguments[$paramPos] = $this->get($class);
-                    }
-                }
-
-                $builtObject = $reflectedObject->newInstanceArgs($arguments);
-            }
-        }else{
+        if ($reflectedObject->hasMethod('__construct')) {
+            $builtObject =
+                count($reflectedObject->getMethod('__construct')->getParameters()) === 0
+                    ? new $object() : $this->initComponentWithConstructor($reflectedObject, $params);
+        } else {
             $builtObject = new $object();
         }
 
@@ -85,15 +58,61 @@ class Container extends BaseContainer
     }
 
     /**
-     * @param array $params
-     * @param string ...$objects
+     * Returns constructed object.
+     *
+     * Creates object with constructor with classes from current container
+     * and given parameters.
+     *
+     * @param ReflectionClass $reflectedObject Reflected class.
+     * @param array $entryParams = [
+     *      'age' => 100,// If __construct method has param $age
+     *      'name' => 'ExampleName',// If __construct method has param $name
+     * ]
+     *
+     * @return object Constructed object.
+     *
      * @throws ErrorException
-     * @throws ReflectionException|\joole\framework\data\container\NotFoundException
+     * @throws NotFoundException
+     * @throws ReflectionException
      */
-    public function multiplePush(array $params, string ...$objects): void
+    private function initComponentWithConstructor(ReflectionClass $reflectedObject, array $entryParams = []): object
     {
-        foreach ($objects as $object){
-            $this->register($object, $params);
+        $constructor = $reflectedObject->getMethod('__construct');
+        $params = $constructor->getParameters();
+
+        $arguments = [];
+
+        foreach ($params as $param) {
+            /** @var ReflectionNamedType $class */
+            $type = $param->getType();
+            $class = (string)$type->getName();
+            $paramPos = $param->getPosition();
+
+            // If argument is not class or class $class doesn't exists,
+            // we will declare argument from params by param name.
+            if (!class_exists($class)) {
+                $name = $param->getName();
+
+                // If entry param with name $name doesn't exists
+                if (!isset($entryParams[$name])) {
+                    // If param $name have default value, it will be set to default value
+                    if ($param->isOptional()) {
+                        $arguments[$paramPos] = $param->getDefaultValue();
+
+                        continue;
+                    }
+
+                    throw new ErrorException('Param with name ' . $name . ' doesn\'t exist in $params array!');
+                }
+
+                $arguments[$paramPos] = $entryParams[$name];
+
+                continue;
+            }
+
+            $arguments[$paramPos] = $this->get($class);
         }
+
+        return $reflectedObject->newInstanceArgs($arguments);
     }
 }

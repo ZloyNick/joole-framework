@@ -4,7 +4,12 @@
   "type": "joole-base",
   "keywords": [
     "joole",
-    "base"
+    "base",
+    "joole-framework",
+    "framework",
+    "php-framework",
+    "php8",
+    "joole-base"
   ],
   "license": "GPL-3.0+",
   "version": "1.7.0",
@@ -17,7 +22,7 @@
   "require": {
     "php": "8.1.*",
     "psr/container": "^2.0",
-    "ext-pdo": "*",
+    "ext-pdo": "^8.1",
     "zloynick/joole-reflector": "^2.0"
   },
   "autoload": {

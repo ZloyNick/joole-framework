@@ -6,7 +6,7 @@ namespace joole\framework\data\types;
 
 use Exception;
 
-class TypeException extends Exception
+class ImmutableException extends Exception
 {
 
 }

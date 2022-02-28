@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace joole\framework\component;
 
-use Closure;
-use joole\framework\data\types\ImmutableArray;
+use function bin2hex;
+use function random_bytes;
 
 /**
  * Component class.
@@ -13,79 +13,26 @@ use joole\framework\data\types\ImmutableArray;
 abstract class BaseComponent implements ComponentInterface
 {
 
-    /** @var string Unique id of component */
-    private string $id;
+    private int|string $id;
 
-    /** @var Closure|array|null Before load data/method */
-    protected null|Closure|array $beforeLoad;
-    /** @var Closure|array|null Load data/method */
-    protected null|Closure|array $load;
-    /** @var Closure|array|null Before unload data/method */
-    protected null|Closure|array $beforeUnload;
-    /** @var Closure|array|null Unload data/method */
-    protected null|Closure|array $unload;
-
-    /** @var \joole\framework\data\types\ImmutableArray Component's configuration */
-    protected ImmutableArray $config;
-
-    public function __construct(string $id)
+    /**
+     * BaseComponent constructor.
+     * @param int|string|null $id If null given - generates random string(6)
+     * @throws \Exception
+     */
+    public function __construct(null|int|string $id = null)
     {
-        $this->id = $id;
+        $this->id = $id ?? bin2hex(random_bytes(3));
     }
 
     /**
-     * Returns an unique component's id
+     * Returns component's id.
      *
-     * @return string
+     * @return string|int
      */
-    final public function getId(): string
+    final public function getId(): string|int
     {
         return $this->id;
     }
 
-    public function beforeLoad(array|Closure|null $callback): void
-    {
-        $callback ?? ($this->beforeLoad = $callback);
-    }
-
-    public function onLoad(array|Closure|null $callback): void
-    {
-        $callback ?? ($this->load = $callback);
-    }
-
-    public function beforeUnload(array|Closure|null $callback): void
-    {
-        $callback ?? ($this->beforeUnload = $callback);
-    }
-
-    public function unload(array|Closure|null $callback): void
-    {
-        $callback ?? ($this->unload = $callback);
-    }
-
-    /**
-     * Initializes component
-     *
-     * @param array $config = [
-     *      "depends": [\My\Example\Component::class],// Checks loaded com
-     * ]
-     */
-    public function init(array $config = [])
-    {
-        if(isset($config['beforeLoad'])){
-            $this->beforeLoad($config['beforeLoad']);
-        }
-
-        if(isset($config['load'])){
-            $this->beforeLoad($config['load']);
-        }
-
-        if(isset($config['beforeUnload'])){
-            $this->beforeLoad($config['beforeUnload']);
-        }
-
-        if(isset($config['unload'])){
-            $this->beforeLoad($config['unload']);
-        }
-    }
 }
