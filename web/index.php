@@ -4,8 +4,8 @@ use joole\framework\Joole;
 
 require_once '../vendor/autoload.php';
 
-$joole = new Joole();
-$config = require_once '../config/joole.php';
-$joole->init($config);
+class App extends \joole\framework\Application{
 
-var_dump(Joole::getContainer('main')->get(ExampleClass::class));
+}
+
+Joole::build(new App())->run();

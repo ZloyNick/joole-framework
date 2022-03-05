@@ -21,7 +21,7 @@ abstract class BaseContainer implements ContainerInterface
      *     "\My\Example\Class" => object(\My\Example\Class)
      * ]
      */
-    protected static array $instances = [];
+    protected array $instances = [];
 
     /**
      * Returns object of container or throws exception.
@@ -33,7 +33,7 @@ abstract class BaseContainer implements ContainerInterface
     public function get(string $id): object
     {
         // Container's objects
-        $instances = &static::$instances;
+        $instances = &$this->instances;
 
         // If container with given $id doesn't exists
         if (!isset($instances[$id])) {
@@ -51,7 +51,7 @@ abstract class BaseContainer implements ContainerInterface
      */
     public function has(string $id): bool
     {
-        return isset(self::$instances[$id]);
+        return isset($this->instances[$id]);
     }
 
     /**

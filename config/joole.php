@@ -1,21 +1,21 @@
 <?php
 
-require_once '../web/core/ExampleClass.php';
-
+/*
+ * Configuration file for Joole class.
+ */
 return [
     'containers' => [
         'main' => [
             [
                 'class' => \joole\reflector\Reflector::class,
-                'depends' => [],
-            ],
-            [
-                'class' => ExampleClass::class,
-                'depends' => [\joole\reflector\Reflector::class],
-                'params' => [
-
+                'depends' => [
+//                    [
+//                        'class' => \joole\reflector\Reflector::class,
+//                        'owner' => 'main',
+//                    ]
                 ],
+//                'params' => [],
             ]
-        ]
+        ],
     ]
 ];

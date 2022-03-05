@@ -13,6 +13,11 @@ use function random_bytes;
 abstract class BaseComponent implements ComponentInterface
 {
 
+    /**
+     * Component's id.
+     *
+     * @var int|string
+     */
     private int|string $id;
 
     /**
@@ -20,7 +25,7 @@ abstract class BaseComponent implements ComponentInterface
      * @param int|string|null $id If null given - generates random string(6)
      * @throws \Exception
      */
-    public function __construct(null|int|string $id = null)
+    final public function __construct(null|int|string $id = null)
     {
         $this->id = $id ?? bin2hex(random_bytes(3));
     }
@@ -34,5 +39,10 @@ abstract class BaseComponent implements ComponentInterface
     {
         return $this->id;
     }
+
+    /**
+     * Runs component with options.
+     */
+    abstract public function run(array $options):void;
 
 }

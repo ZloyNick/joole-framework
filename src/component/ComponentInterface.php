@@ -23,8 +23,10 @@ interface ComponentInterface
     public function init(): void;
 
     /**
-     * Executes component.
+     * Runs component.
+     *
+     * @param array $options
      */
-    public function run(): void;
+    public function run(array $options): void;
 
 }

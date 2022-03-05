@@ -54,7 +54,7 @@ class Container extends BaseContainer
             $builtObject = new $object();
         }
 
-        self::$instances[$object] = $builtObject;
+        $this->instances[$object] = $builtObject;
     }
 
     /**
@@ -108,8 +108,16 @@ class Container extends BaseContainer
                 $arguments[$paramPos] = $entryParams[$name];
 
                 continue;
+            }else{
+                // Container dependency checking
+                if (isset($entryParams[$class])) {
+                    $arguments[$paramPos] = $entryParams[$class];
+
+                    continue;
+                }
             }
 
+            // Local search
             $arguments[$paramPos] = $this->get($class);
         }
 
