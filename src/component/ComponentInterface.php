@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace joole\framework\component;
 
+use joole\framework\Application;
+
 /**
  * An interface of component
  */
@@ -19,14 +21,16 @@ interface ComponentInterface
 
     /**
      * Initializes component.
+     *
+     * @param array $options Component's options.
      */
-    public function init(): void;
+    public function init(array $options): void;
 
     /**
-     * Runs component.
+     * Interaction with the web application.
      *
-     * @param array $options
+     * @param Application $app
      */
-    public function run(array $options): void;
+    public function run(Application $app): void;
 
 }

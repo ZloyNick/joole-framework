@@ -17,5 +17,12 @@ return [
 //                'params' => [],
             ]
         ],
-    ]
+    ],
+    'components' => [
+        [
+            'name' => 'router',
+            'class' => \joole\framework\routing\BaseRouter::class,
+            'options' => [],
+        ],
+    ],
 ];

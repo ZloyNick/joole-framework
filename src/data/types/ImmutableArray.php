@@ -31,7 +31,7 @@ final class ImmutableArray implements ArrayAccess
     /**
      * @inheritDoc
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset):mixed
     {
         return $this->items[$offset] ?? null;
     }
@@ -41,7 +41,7 @@ final class ImmutableArray implements ArrayAccess
      * @throws ImmutableException
      * @deprecated Not needs at this class.
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value):void
     {
         throw new ImmutableException('Can\'t set value for array: array is an immutable.');
     }
@@ -51,7 +51,7 @@ final class ImmutableArray implements ArrayAccess
      * @throws ImmutableException
      * @deprecated Not needs at this class
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset):void
     {
         throw new ImmutableException('Can\'t unset value for array: array is an immutable.');
     }

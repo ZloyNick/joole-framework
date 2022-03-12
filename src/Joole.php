@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace joole\framework;
 
+use joole\framework\component\BaseComponent;
 use joole\framework\component\ComponentInterface;
 use joole\framework\data\container\BaseContainer;
 use joole\framework\data\container\Container;
@@ -11,10 +12,12 @@ use joole\framework\data\container\NotFoundException;
 use joole\framework\data\types\ImmutableArray;
 use joole\framework\exception\config\ConfigurationException;
 use joole\reflector\Reflector;
+use RuntimeException;
 use function array_keys;
 use function class_exists;
 use function container;
 use function is_array;
+use function is_subclass_of;
 
 
 /**
@@ -54,10 +57,14 @@ final class Joole
      * @return Application
      * @throws ConfigurationException
      */
-    public static function build(Application $application):Application{
+    public static function build(Application $application): Application
+    {
+        self::$app = &$application;
+
         $application->init();
         self::init($application->getConfig('joole'));
-        return self::$app = $application;
+
+        return self::$app;
     }
 
     /**
@@ -101,10 +108,50 @@ final class Joole
         }
 
         if (isset($data['components'])) {
-            self::registerContainers($data['containers']);
+            self::registerComponents($data['components']);
         }
     }
 
+    /**
+     * Registers components.
+     *
+     * @param array $components
+     */
+    private static function registerComponents(array $components): void
+    {
+        foreach ($components as $num => $component) {
+            if (!isset($component['class'])) {
+                throw new ConfigurationException(
+                    'The "class" index of the component "#[' . $num . ']" is not detected!'
+                );
+            }
+
+            $class = $component['class'];
+
+            if (!class_exists($class)) {
+                throw new RuntimeException('Class "' . $class . '" doesn\'t exists!');
+            }
+
+            if (!is_subclass_of($class, BaseComponent::class)) {
+                throw new ConfigurationException('Component "' . $class . '" must be instance of ' . BaseComponent::class);
+            }
+
+            $name = $component['name'] ?? null;
+            $options = $component['options'] ?? [];
+
+            self::$app->registerComponent(new $class($name), $options);
+        }
+    }
+
+    /**
+     * Registers containers.
+     *
+     * @param array $containers
+     * @throws ConfigurationException
+     * @throws NotFoundException
+     * @throws \ErrorException
+     * @throws \ReflectionException
+     */
     private static function registerContainers(array $containers): void
     {
         if (!class_exists('joole\reflector\Reflector')) {
@@ -142,7 +189,11 @@ final class Joole
                                 );
                             }
 
-                            $expectedClass = $dependData['class'];
+                            if (!class_exists($class = $dependData['class'])) {
+                                throw new RuntimeException('Class "' . $class . '" doesn\'t exists!');
+                            }
+
+                            $expectedClass = $class;
 
                             if (!isset($dependData['owner'])) {
                                 throw new ConfigurationException(

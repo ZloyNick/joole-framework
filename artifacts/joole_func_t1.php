@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use joole\framework\Application;
 use joole\framework\data\container\Container;
 use joole\framework\Joole;
 
@@ -47,6 +48,22 @@ function scan_dir(string $dir): array
     return $elements;
 }
 
+/**
+ * Returns config.
+ *
+ * @param string $name
+ * @param array|null $default
+ * @return array|null
+ */
 function config(string $name, array|null $default = null):array|null{
     return Joole::$app->getConfig($name, $default);
+}
+
+/**
+ * Returns an application's instance.
+ *
+ * @return Application
+ */
+function app(): Application{
+    return Joole::$app;
 }

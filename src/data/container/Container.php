@@ -43,6 +43,11 @@ class Container extends BaseContainer
             throw new AssertionError($object . ' can\'t be asserted to this container! This object already exists.');
         }
 
+        // If class not exists.
+        if(!class_exists($object)){
+            throw new NotFoundException('Class "'.$object.'" doesn\'t exists!');
+        }
+
         $reflectedObject = new ReflectionClass($object);
 
         // If object hasn't constructor

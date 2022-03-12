@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace joole\framework;
 
+use joole\framework\component\BaseComponent;
+use joole\framework\component\ComponentInterface;
 use joole\framework\data\types\ImmutableArray;
 use joole\framework\exception\config\ConfigurationException;
+use joole\framework\http\Request;
+use joole\framework\routing\Router;
 use joole\reflector\Reflector;
 use function array_diff;
 use function constant;
@@ -22,6 +26,8 @@ use function scan_dir;
  * The Application class is the entry point of a web application.
  *
  * It allows you to manage application processes, its components and modules.
+ *
+ * @property-read Request $request
  */
 abstract class Application
 {
@@ -34,11 +40,20 @@ abstract class Application
     private ?string $configurationsDirectory = null;
 
     /**
-     * Configurations files.
+     * Components.
+     *
+     * @var ComponentInterface[]
+     */
+    private array $components = [];
+
+    /**
+     * Configurations.
      *
      * @var ImmutableArray
      */
     private ImmutableArray $configurations;
+
+    private Router $router;
 
     /**
      * Required configurations.
@@ -123,6 +138,10 @@ abstract class Application
     public function run()
     {
         define('APP_STARTED', microtime(true));
+
+        $this->request = new Request();
+
+        $this->router->handleRequest();
     }
 
     /**
@@ -146,11 +165,22 @@ abstract class Application
         return $this->configurations[$configName] ?? $default;
     }
 
+    /**
+     * Returns configurations directory.
+     *
+     * @return string
+     */
     final public function getConfigurationsDirectory(): string
     {
         return $this->configurationsDirectory;
     }
 
+    /**
+     * Sets configurations directory.
+     *
+     * @param string $configurationsPath
+     * @throws ConfigurationException
+     */
     final public function setConfigurationsDirectory(string $configurationsPath): void
     {
         if (!is_dir($configurationsPath)) {
@@ -158,6 +188,30 @@ abstract class Application
         }
 
         $this->configurationsDirectory = $configurationsPath;
+    }
+
+    /**
+     * Runs component.
+     *
+     * @param BaseComponent $component
+     * @param array $config
+     */
+    final public function registerComponent(BaseComponent $component, array $config = []){
+        $components = &$this->components;
+
+        $component->init($config);
+        $component->run($this);
+
+        $components[$component->getId()] = $component;
+    }
+
+    /**
+     * Sets router for application.
+     *
+     * @param Router $router
+     */
+    final public function setRouter(Router $router){
+        $this->router = $router;
     }
 
 }
