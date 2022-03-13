@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace joole\framework\http;
+namespace joole\framework\exception\http;
 
 use Exception;
 
@@ -13,4 +13,6 @@ use Exception;
  *
  * @package joole\framework\http
  */
-class HttpException extends Exception{}
+class HttpException extends Exception
+{
+}

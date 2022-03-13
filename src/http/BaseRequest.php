@@ -8,6 +8,8 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 use TypeError;
+use joole\framework\exception\http\HttpException;
+
 use function explode;
 use function is_string;
 use function str_replace;
@@ -196,20 +198,20 @@ abstract class BaseRequest implements RequestInterface
         // TODO: Implement withBody() method.
     }
 
-    public function getRequestTarget():mixed
+    public function getRequestTarget(): mixed
     {
         return $this->requestTarget;
     }
 
-    public function withRequestTarget($requestTarget) : static
+    public function withRequestTarget($requestTarget): static
     {
         $oldTarget = $this->requestTarget ?? false;
         $this->requestTarget = $requestTarget;
         $exemplar = clone $this;
 
-        if($oldTarget === false){
+        if ($oldTarget === false) {
             unset($this->requestTarget);
-        }else{
+        } else {
             $this->requestTarget = $oldTarget;
         }
 
@@ -221,7 +223,7 @@ abstract class BaseRequest implements RequestInterface
         return $this->method;
     }
 
-    public function withMethod($method) :static
+    public function withMethod($method): static
     {
         if (!is_string($method)) {
             throw new TypeError('Invalid method\'s type given: ' . gettype($method));
@@ -229,8 +231,8 @@ abstract class BaseRequest implements RequestInterface
 
         if (!in_array($method, self::ALLOWED_METHODS)) {
             throw new HttpException(
-                'Invalid method given: ' . $method.
-                '. Expected: '.implode(', ', self::ALLOWED_METHODS)
+                'Invalid method given: ' . $method .
+                '. Expected: ' . implode(', ', self::ALLOWED_METHODS)
             );
         }
 
@@ -242,14 +244,14 @@ abstract class BaseRequest implements RequestInterface
         return $exemplar;
     }
 
-    public function getUri():BaseUri
+    public function getUri(): BaseUri
     {
         return $this->uri;
     }
 
-    public function withUri(UriInterface $uri, $preserveHost = false):static
+    public function withUri(UriInterface $uri, $preserveHost = false): static
     {
-        if($preserveHost){
+        if ($preserveHost) {
             $this->uri = $uri;
 
             return $this;

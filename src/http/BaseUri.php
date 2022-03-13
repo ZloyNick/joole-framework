@@ -6,6 +6,7 @@ namespace joole\framework\http;
 
 use Psr\Http\Message\UriInterface;
 use TypeError;
+use joole\framework\exception\http\HttpException;
 use function explode;
 use function filter_var;
 use function gettype;

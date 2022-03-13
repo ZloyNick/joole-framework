@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 use joole\framework\Application;
 use joole\framework\data\container\Container;
+use joole\framework\http\Request;
 use joole\framework\Joole;
 
 use function scandir as scandir_native;
 
 /** @noinspection PhpUnused */
-const BASE_CONFIGURATION_PATH = __DIR__."/../config";
+const BASE_CONFIGURATION_PATH = __DIR__ . "/../config";
 
 /**
  * Returns container by name.
@@ -55,8 +56,9 @@ function scan_dir(string $dir): array
  * @param array|null $default
  * @return array|null
  */
-function config(string $name, array|null $default = null):array|null{
-    return Joole::$app->getConfig($name, $default);
+function config(string $name, array|null $default = null): array|null
+{
+    return app()->getConfig($name, $default);
 }
 
 /**
@@ -64,6 +66,17 @@ function config(string $name, array|null $default = null):array|null{
  *
  * @return Application
  */
-function app(): Application{
+function app(): Application
+{
     return Joole::$app;
+}
+
+/**
+ * Returns client's request as model.
+ *
+ * @return Request
+ */
+function request(): Request
+{
+    return app()->request;
 }

@@ -26,12 +26,31 @@ interface Router
      * <code>
      * [
      *      'examplePath',
-     *      'example_param' => 'value',
+     *      ['example_param' => 'value']
      * ]
      * </code>
+     *
      * @return string Path url.
      */
     public static function to(array $data): string;
+
+    /**
+     * Registers action and route.
+     *
+     * @param array $data ['route.name', bindParams[]] Route and bind params.
+     *
+     * If action has binds, set it:
+     * Example:
+     * <code>
+     * ```
+     *      // Route "your.route" has action: /your/route/:id
+     *      BaseRouter::toRoute(['your.route', ['id' => $id]]);
+     * ```
+     * </code>
+     *
+     * @return string Action.
+     */
+    public static function toRoute(array $data): string;
 
     /**
      * Handles request.
