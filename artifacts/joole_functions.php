@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use joole\framework\Application;
-use joole\framework\http\response\BaseResponse;
 use joole\framework\http\request\Request;
+use joole\framework\http\response\BaseResponse;
 use joole\framework\Joole;
 
 /** @noinspection PhpUnused */
@@ -47,7 +47,8 @@ function request(): Request
  *
  * @return BaseResponse|\joole\framework\http\response\Response
  */
-function response(): BaseResponse{
+function response(): BaseResponse
+{
     return app()->response;
 }
 
@@ -57,7 +58,8 @@ function response(): BaseResponse{
  * @param int $bytesCount
  * @return string
  */
-function convertMemorySize(int $bytesCount):string{
+function convertMemorySize(int $bytesCount): string
+{
     $units = ['B', 'KB', 'MB', 'GB', 'TB'];
 
     $bytes = max($bytesCount, 0);

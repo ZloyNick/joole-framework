@@ -25,41 +25,41 @@ class Request extends BaseRequest implements ArrayAccess
         $this->_post = $_POST;
         $files = [];
 
-        foreach ($_FILES as $paramName => $fileInfo){
+        foreach ($_FILES as $paramName => $fileInfo) {
             $files[$paramName] = new UploadedFile($fileInfo);
         }
 
         $this->_files = $files;
     }
 
-    public function offsetExists(mixed $offset):bool
+    public function offsetExists(mixed $offset): bool
     {
         return isset($this->_post[$offset]) || isset($this->_get[$offset]);
     }
 
-    public function offsetGet(mixed $offset):mixed
+    public function offsetGet(mixed $offset): mixed
     {
         return ($this->_get[$offset] ?? $this->_post[$offset]) ?? null;
     }
 
-    public function offsetSet(mixed $offset, $value):void
+    public function offsetSet(mixed $offset, $value): void
     {
-        if(isset($this->_get[$offset])){
+        if (isset($this->_get[$offset])) {
             $this->_get[$offset] = $value;
-        }elseif (isset($this->_post[$offset])){
+        } elseif (isset($this->_post[$offset])) {
             $this->_post[$offset] = $value;
-        }else{
+        } else {
             $this->{$offset} = $value;
         }
     }
 
-    public function offsetUnset(mixed $offset):void
+    public function offsetUnset(mixed $offset): void
     {
-        if(isset($this->_get[$offset])){
+        if (isset($this->_get[$offset])) {
             unset($this->_get[$offset]);
-        }elseif (isset($this->_post[$offset])){
+        } elseif (isset($this->_post[$offset])) {
             unset($this->_post[$offset]);
-        }else{
+        } else {
             unset($this->{$offset});
         }
     }
@@ -69,7 +69,8 @@ class Request extends BaseRequest implements ArrayAccess
      *
      * @return array
      */
-    public function all():array{
+    public function all(): array
+    {
         return array_merge_recursive($this->_get, $this->_post);
     }
 
@@ -87,8 +88,9 @@ class Request extends BaseRequest implements ArrayAccess
      *      </li> array - all POST params;</li>
      * </ul>
      */
-    public function post(?string $param = null, mixed $default = null):mixed{
-        if($param){
+    public function post(?string $param = null, mixed $default = null): mixed
+    {
+        if ($param) {
             return $this->_post[$param] ?? $default;
         }
 
@@ -109,8 +111,9 @@ class Request extends BaseRequest implements ArrayAccess
      *      <li> array - all GET params;</li>
      * </ul>
      */
-    public function get(?string $param = null, mixed $default = null):mixed{
-        if($param){
+    public function get(?string $param = null, mixed $default = null): mixed
+    {
+        if ($param) {
             return $this->_get[$param] ?? $default;
         }
 
@@ -126,7 +129,8 @@ class Request extends BaseRequest implements ArrayAccess
      *
      * @return void
      */
-    public function mutate(Mutations $varName, string $name, mixed $value = null):void{
+    public function mutate(Mutations $varName, string $name, mixed $value = null): void
+    {
         $this->{$varName->value}[$name] = $value;
     }
 }

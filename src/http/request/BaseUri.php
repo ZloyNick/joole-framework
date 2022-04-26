@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace joole\framework\http\request;
 
-use TypeError;
 use joole\framework\exception\http\HttpException;
+use TypeError;
 use function explode;
 use function filter_var;
 use function gettype;

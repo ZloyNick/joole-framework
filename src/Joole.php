@@ -9,7 +9,6 @@ use joole\framework\component\ComponentInterface;
 use joole\framework\data\types\ImmutableArray;
 use joole\framework\exception\config\ConfigurationException;
 use RuntimeException;
-
 use function class_exists;
 use function is_subclass_of;
 

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace joole\framework\controller;
 
-use joole\framework\http\response\BaseResponse;
 use joole\framework\http\request\BaseRequest;
+use joole\framework\http\response\BaseResponse;
 use joole\framework\routing\ActionInterface;
 use joole\framework\view\BaseView;
 use joole\framework\view\ViewInterface;
@@ -58,10 +58,10 @@ class BaseController implements ControllerInterface
     /**
      * Adds js code to view.
      *
-     * @see ViewInterface::renderJs()
-     *
      * @param string $jsContent
      * @throws \joole\framework\exception\view\RendererException
+     * @see ViewInterface::renderJs()
+     *
      */
     public function setJS(string $jsContent): void
     {
@@ -71,10 +71,10 @@ class BaseController implements ControllerInterface
     /**
      * Adds css to view.
      *
-     * @see ViewInterface::renderCss()
-     *
      * @param string $cssContent
      * @throws \joole\framework\exception\view\RendererException
+     * @see ViewInterface::renderCss()
+     *
      */
     public function setCSS(string $cssContent): void
     {

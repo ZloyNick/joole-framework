@@ -6,8 +6,8 @@ namespace joole\framework\routing;
 
 use Closure;
 use joole\framework\exception\component\ComponentException;
-use joole\framework\http\response\BaseResponse;
 use joole\framework\http\request\BaseUri;
+use joole\framework\http\response\BaseResponse;
 
 /**
  * A basic router interface.

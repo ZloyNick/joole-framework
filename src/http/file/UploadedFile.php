@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace joole\framework\http\file;
 
-use function move_uploaded_file, chmod, mkdir, array_key_last, explode;
+use function array_key_last;
+use function chmod;
+use function explode;
+use function mkdir;
+use function move_uploaded_file;
 
 /**
  * Uploaded file as object.

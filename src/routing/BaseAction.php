@@ -7,9 +7,9 @@ namespace joole\framework\routing;
 use Closure;
 use joole\framework\controller\ControllerInterface;
 use joole\framework\exception\component\ComponentException;
-use joole\framework\http\response\BaseResponse;
 use joole\framework\http\request\BaseRequest;
 use joole\framework\http\request\Mutations;
+use joole\framework\http\response\BaseResponse;
 use joole\framework\validator\http\RequestValidatorInterface;
 use ReflectionClass;
 use ReflectionFunction;
@@ -73,7 +73,7 @@ class BaseAction implements ActionInterface
         $callback = $this->executionPath;
         $request = request();
 
-        foreach ($params as $paramName => $value){
+        foreach ($params as $paramName => $value) {
             $request->mutate(Mutations::GET_MUTATION, $paramName, $value);
         }
 
@@ -121,7 +121,6 @@ class BaseAction implements ActionInterface
      * @return array Function params.
      *
      * @throws ComponentException
-     * @throws \ReflectionException
      */
     private static function getConstructorParams(ReflectionFunctionAbstract $function, array $actionParams = [])
     {
@@ -170,10 +169,10 @@ class BaseAction implements ActionInterface
      * @param Closure $closure Closure for action.
      * @param array $actionParams Params from action.
      *
-     * @throws ComponentException
+     * @return BaseResponse
      * @throws \ReflectionException
      *
-     * @return BaseResponse
+     * @throws ComponentException
      */
     public function closure(Closure $closure, array $actionParams = []): BaseResponse
     {
@@ -194,10 +193,10 @@ class BaseAction implements ActionInterface
      * @param string $method Method as string
      * @param array $actionParams Params from action.
      *
-     * @throws ComponentException
+     * @return BaseResponse
      * @throws \ReflectionException
      *
-     * @return BaseResponse
+     * @throws ComponentException
      */
     public function controller(string $controller, string $method, array $actionParams = []): BaseResponse
     {
@@ -216,7 +215,7 @@ class BaseAction implements ActionInterface
          *
          * @var ControllerInterface $controller
          */
-        $controller = new $controller();
+        $controller = new $controller($this);
         // Reflected method using in function for constructor param parsing.
         $reflectedMethod = (new ReflectionClass($controller))->getMethod($method);
         // Built params from method params.

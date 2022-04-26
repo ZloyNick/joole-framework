@@ -19,6 +19,6 @@ interface RequestValidatorInterface
      *
      * @return BaseResponse
      */
-    public function response():BaseResponse;
+    public function response(): BaseResponse;
 
 }

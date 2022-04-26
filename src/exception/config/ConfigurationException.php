@@ -9,4 +9,6 @@ use Exception;
 /**
  * Class ConfigurationException
  */
-class ConfigurationException extends Exception {}
+class ConfigurationException extends Exception
+{
+}
