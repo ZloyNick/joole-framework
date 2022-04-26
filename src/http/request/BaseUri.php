@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace joole\framework\http\request;
 
-use Psr\Http\Message\UriInterface;
 use TypeError;
 use joole\framework\exception\http\HttpException;
 use function explode;
@@ -21,7 +20,7 @@ use function substr_count;
 /**
  * A base representation of URI.
  */
-class BaseUri implements UriInterface
+class BaseUri
 {
 
     /** @var string Scheme of request. */
