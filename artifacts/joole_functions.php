@@ -3,24 +3,12 @@
 declare(strict_types=1);
 
 use joole\framework\Application;
-use joole\framework\data\container\Container;
 use joole\framework\http\response\BaseResponse;
 use joole\framework\http\request\Request;
 use joole\framework\Joole;
 
 /** @noinspection PhpUnused */
 const BASE_CONFIGURATION_PATH = __DIR__ . "/../config";
-
-/**
- * Returns container by name.
- *
- * @param string $name Container's name
- * @return Container|null
- */
-function container(string $name): ?Container
-{
-    return Joole::getContainer($name);
-}
 
 /**
  * Returns config.
