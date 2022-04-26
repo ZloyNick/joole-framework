@@ -7,6 +7,7 @@ namespace joole\framework\routing;
 use Closure;
 use joole\framework\controller\ControllerInterface;
 use joole\framework\exception\component\ComponentException;
+use joole\framework\http\response\BaseResponse;
 use joole\framework\http\request\BaseRequest;
 use joole\framework\http\request\Mutations;
 use joole\framework\validator\http\RequestValidatorInterface;
@@ -65,11 +66,9 @@ class BaseAction implements ActionInterface
         return $this;
     }
 
-    public function execute(array $params): void
+    public function execute(array $params): BaseResponse
     {
-        if (!$this->validateValues($params)) {
-            return;
-        }
+        $this->validateValues($params);
 
         $callback = $this->executionPath;
         $request = request();
@@ -79,7 +78,7 @@ class BaseAction implements ActionInterface
         }
 
         if ($callback instanceof Closure) {
-            $this->closure($callback, $params);
+            return $this->closure($callback, $params);
         } else {
             // If runtime using "controller@method" pattern.
             if (is_string($callback)) {
@@ -97,7 +96,7 @@ class BaseAction implements ActionInterface
                 throw new ComponentException('Method not included. Please, use "[\ControllerClass::class, "method"]" array!');
             }
 
-            $this->controller($callback[0], $callback[1], $params);
+            return $this->controller($callback[0], $callback[1], $params);
         }
     }
 
@@ -173,8 +172,10 @@ class BaseAction implements ActionInterface
      *
      * @throws ComponentException
      * @throws \ReflectionException
+     *
+     * @return BaseResponse
      */
-    public function closure(Closure $closure, array $actionParams = []): mixed
+    public function closure(Closure $closure, array $actionParams = []): BaseResponse
     {
         // Reflected function using in function for constructor param parsing.
         $reflectedClosure = new ReflectionFunction($closure);
@@ -195,15 +196,17 @@ class BaseAction implements ActionInterface
      *
      * @throws ComponentException
      * @throws \ReflectionException
+     *
+     * @return BaseResponse
      */
-    public function controller(string $controller, string $method, array $actionParams = []): mixed
+    public function controller(string $controller, string $method, array $actionParams = []): BaseResponse
     {
         // If class not exist.
         if (!class_exists($controller)) {
             throw new ComponentException('Controller class ' . $controller . ' doesn\'t exist');
         }
 
-        // Controller must be instance of ControllerInterface!
+        // Controller must be instanced of ControllerInterface!
         if (!is_subclass_of($controller, ControllerInterface::class)) {
             throw new ComponentException('Controller ' . $controller . ' must be instance of ' . ControllerInterface::class);
         }

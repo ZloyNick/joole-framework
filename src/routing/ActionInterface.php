@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace joole\framework\routing;
 
+use joole\framework\http\response\BaseResponse;
 use joole\framework\validator\http\RequestValidatorInterface;
 
 /**
@@ -62,8 +63,8 @@ interface ActionInterface
      *
      * @param array $params Action params.
      *
-     * @return void
+     * @return BaseResponse
      */
-    public function execute(array $params):void;
+    public function execute(array $params):BaseResponse;
 
 }

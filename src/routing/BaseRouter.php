@@ -9,6 +9,7 @@ use joole\framework\Application;
 use joole\framework\component\BaseComponent;
 use joole\framework\exception\component\ComponentException;
 use joole\framework\exception\config\ComponentConfigurationException;
+use joole\framework\http\response\BaseResponse;
 use joole\framework\http\request\BaseUri;
 
 use function request;
@@ -236,7 +237,7 @@ class BaseRouter extends BaseComponent implements Router
      * @throws \ReflectionException
      * @throws \joole\framework\exception\component\ComponentException
      */
-    final public function handleRequest(): void
+    final public function handleRequest(): BaseResponse
     {
         // URI as object.
         $requestUri = request()->getUri();
@@ -248,7 +249,7 @@ class BaseRouter extends BaseComponent implements Router
         /**
          * @var ActionInterface $action
          */
-        $action->execute($params);
+        return $action->execute($params);
     }
 
     /**

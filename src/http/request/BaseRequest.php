@@ -30,15 +30,17 @@ abstract class BaseRequest
 
     public function __construct()
     {
-        $headers = &$this->headers;
+        $headers = [];
 
         foreach ($_SERVER as $key => $value) {
             if (!str_starts_with($key, 'HTTP_')) {
                 continue;
             }
 
-            $headers[self::extractHeaderName($key)] = explode(', ', $value);
+            $headers[self::extractHeaderName($key)] = explode(',', $value);
         }
+
+        $this->headers = $headers;
 
         [
             $this->protocol,
@@ -118,7 +120,7 @@ abstract class BaseRequest
 
     public function getHeaderLine($name): string
     {
-        return implode(', ', $this->getHeader($name));
+        return implode(',', $this->getHeader($name));
     }
 
     /**

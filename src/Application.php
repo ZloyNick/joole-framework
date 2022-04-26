@@ -8,7 +8,7 @@ use joole\framework\component\BaseComponent;
 use joole\framework\component\ComponentInterface;
 use joole\framework\data\types\ImmutableArray;
 use joole\framework\exception\config\ConfigurationException;
-use joole\framework\exception\http\response\Response;
+use joole\framework\http\response\Response;
 use joole\framework\http\request\Request;
 use joole\framework\routing\Router;
 use joole\reflector\object\ReflectedObject;
@@ -154,14 +154,12 @@ abstract class Application
      */
     public function run()
     {
-        define('APP_STARTED', microtime(true));
-
         $this->request = new Request();
-//        $response = new Response();
-//        $response = $response->withHeader('X-Powered-By', 'Joole Base v2.32');
-//        $this->response = $response;
+        $this->response = (new Response())
+            ->withHeader('X-Powered-By', ['Joole Base v2.32'])
+            ->withHeader('Content-Type', ['text/html; charset=utf-8']);
 
-        $this->router->handleRequest();
+        print($this->router->handleRequest());
     }
 
     /**

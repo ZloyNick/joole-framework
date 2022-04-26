@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use joole\framework\Application;
 use joole\framework\data\container\Container;
-use joole\framework\exception\http\response\BaseResponse;
+use joole\framework\http\response\BaseResponse;
 use joole\framework\http\request\Request;
 use joole\framework\Joole;
 
@@ -57,7 +57,7 @@ function request(): Request
 /**
  * Returns response as object.
  *
- * @return BaseResponse
+ * @return BaseResponse|\joole\framework\http\response\Response
  */
 function response(): BaseResponse{
     return app()->response;

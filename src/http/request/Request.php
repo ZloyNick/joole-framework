@@ -23,12 +23,13 @@ class Request extends BaseRequest implements ArrayAccess
 
         $this->_get = $_GET;
         $this->_post = $_POST;
-        $files = &$this->_files;
         $files = [];
 
         foreach ($_FILES as $paramName => $fileInfo){
             $files[$paramName] = new UploadedFile($fileInfo);
         }
+
+        $this->_files = $files;
     }
 
     public function offsetExists(mixed $offset):bool

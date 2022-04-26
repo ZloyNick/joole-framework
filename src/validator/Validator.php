@@ -35,7 +35,7 @@ class Validator implements ValidatorInterface
             $this->validateColumn($column, $value, $this->rules()[$column]);
         }
 
-        return count($this->getErrors()) > 0;
+        return count($this->getErrors()) === 0;
     }
 
     /**
@@ -43,7 +43,6 @@ class Validator implements ValidatorInterface
      */
     final public function validateColumn(string $column, mixed $value, array $rules): void
     {
-
         if (method_exists($this, 'validate' . $column)) {
             $this->{'validate' . $column}($value);
 

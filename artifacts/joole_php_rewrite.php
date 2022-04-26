@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use function scan_dir as scandir_native;
+use function scandir as scandir_native;
 
 /**
  * Analog of php:scandir, but without '.' and '..' elements.

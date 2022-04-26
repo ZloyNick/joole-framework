@@ -4,17 +4,24 @@ declare(strict_types=1);
 
 namespace joole\framework\controller;
 
+use joole\framework\http\response\BaseResponse;
 use joole\framework\http\request\BaseRequest;
+use joole\framework\routing\ActionInterface;
 use joole\framework\view\BaseView;
 use joole\framework\view\ViewInterface;
 
+/**
+ * The basic controller.
+ *
+ * @property \joole\framework\routing\BaseAction $action
+ */
 class BaseController implements ControllerInterface
 {
 
     protected BaseRequest $request;
     private ViewInterface $view;
 
-    public function __construct()
+    public function __construct(protected readonly ActionInterface $action)
     {
         $this->request = request();
         $this->view = new BaseView();
@@ -80,16 +87,18 @@ class BaseController implements ControllerInterface
      * @param string $view
      * @param array $params
      *
-     * @return string|ViewInterface
+     * @return string
      *
      * @throws \joole\framework\exception\view\RendererException
      * @throws \joole\framework\exception\view\ViewException
-     * @see ViewInterface::renderFile()
      *
+     * @see ViewInterface::renderFile()
      */
-    public function render(string $view, array $params = []): string|ViewInterface
+    public function render(string $view, array $params = []): BaseResponse
     {
-        return $this->view->renderFile($view . '.php', $params);
+        return response()->withOutput(
+            $this->view->renderFile($view . '.php', $params)
+        );
     }
 
 }

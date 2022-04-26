@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace joole\framework\validator\http;
 
-use joole\framework\exception\http\response\BaseResponse;
+use joole\framework\http\response\BaseResponse;
 
 /**
  * Interface RequestValidator

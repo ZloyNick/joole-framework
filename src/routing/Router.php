@@ -6,6 +6,7 @@ namespace joole\framework\routing;
 
 use Closure;
 use joole\framework\exception\component\ComponentException;
+use joole\framework\http\response\BaseResponse;
 use joole\framework\http\request\BaseUri;
 
 /**
@@ -100,8 +101,8 @@ interface Router
     /**
      * Handles request.
      *
-     * @return mixed
+     * @return BaseResponse
      */
-    public function handleRequest(): void;
+    public function handleRequest(): BaseResponse;
 
 }
