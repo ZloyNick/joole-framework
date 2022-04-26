@@ -32,9 +32,9 @@ class BaseView implements ViewInterface
 
     public static function setRenderer(RendererInterface|string $rendererClass): void
     {
-        if(is_string($rendererClass)){
-            if(is_subclass_of($rendererClass, RendererInterface::class)){
-                throw new ViewException('New renderer class must be instance of '.RendererInterface::class);
+        if (is_string($rendererClass)) {
+            if (is_subclass_of($rendererClass, RendererInterface::class)) {
+                throw new ViewException('New renderer class must be instance of ' . RendererInterface::class);
             }
 
             self::$renderer = new $rendererClass();
@@ -45,14 +45,14 @@ class BaseView implements ViewInterface
 
     public function renderFile(string $file, array $params = []): string
     {
-        $file = app()->getConfig('app')['views'].$file;
+        $file = app()->getConfig('app')['views'] . $file;
 
         return self::$renderer->renderFileContent($file, $params);
     }
 
     public function renderCssFile(string $file): static
     {
-        if(!is_file($file)){
+        if (!is_file($file)) {
             throw new ViewException('File ' . $file . ' not found');
         }
 
@@ -66,7 +66,7 @@ class BaseView implements ViewInterface
 
     public function renderJsFile(string $file): static
     {
-        if(!is_file($file)){
+        if (!is_file($file)) {
             throw new ViewException('File ' . $file . ' not found');
         }
 

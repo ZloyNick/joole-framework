@@ -49,7 +49,7 @@ interface ValidatorInterface
      *
      * @return array
      */
-    public function messages():array;
+    public function messages(): array;
 
     /**
      * Returns rules for params of the array or object.

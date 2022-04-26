@@ -33,14 +33,14 @@ interface ActionInterface
      *
      * @return static Current action class.
      */
-    public function withValidators(string|RequestValidatorInterface ...$validators):static;
+    public function withValidators(string|RequestValidatorInterface ...$validators): static;
 
     /**
      * Returns all validators for action.
      *
      * @return RequestValidatorInterface[]
      */
-    public function getValidators():array;
+    public function getValidators(): array;
 
     /*
      * Requires middlewares for action.
@@ -65,6 +65,6 @@ interface ActionInterface
      *
      * @return BaseResponse
      */
-    public function execute(array $params):BaseResponse;
+    public function execute(array $params): BaseResponse;
 
 }

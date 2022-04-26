@@ -60,7 +60,8 @@ abstract class BaseComponent implements ComponentInterface
      *
      * @return array
      */
-    final public function getOptions():array{
+    final public function getOptions(): array
+    {
         return $this->options;
     }
 

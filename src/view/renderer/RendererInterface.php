@@ -17,20 +17,20 @@ interface RendererInterface
     /**
      * Prepares CSS content for view file.
      *
+     * @param string $cssContent
      * @throws RendererException Will thrown when CSS content is empty.
      *
-     * @param string $cssContent
      */
-    public function renderCssContent(string $cssContent):void;
+    public function renderCssContent(string $cssContent): void;
 
     /**
      * Prepares JS content for view file.
      *
+     * @param string $jsContent
      * @throws RendererException Will thrown when JS content is empty.
      *
-     * @param string $jsContent
      */
-    public function renderJsContent(string $jsContent):void;
+    public function renderJsContent(string $jsContent): void;
 
     /**
      * Renders view file.
@@ -42,7 +42,7 @@ interface RendererInterface
      *
      * @throws RendererException
      */
-    public function renderFileContent(string $file, array $params = []) : string;
+    public function renderFileContent(string $file, array $params = []): string;
 
 
 }

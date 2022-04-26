@@ -8,7 +8,7 @@ namespace joole\framework\http\response;
 class Response extends BaseResponse
 {
 
-    public function asJson(array $data, int $code = 200):static
+    public function asJson(array $data, int $code = 200): static
     {
         $this->withHeader('Content-Type', ['application/json; charset=utf-8']);
 

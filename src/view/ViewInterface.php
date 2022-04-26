@@ -102,6 +102,6 @@ interface ViewInterface
      *
      * @return mixed
      */
-    public function applyResources(ResourceInterface ...$resources):void;
+    public function applyResources(ResourceInterface ...$resources): void;
 
 }

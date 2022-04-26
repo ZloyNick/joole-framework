@@ -65,7 +65,7 @@ abstract class BaseResponse
      */
     public function withHeader(string $name, array $values): static
     {
-        header($name.': '. implode(',', $values));
+        header($name . ': ' . implode(',', $values));
 
         $this->headers[$name] = $values;
 
@@ -100,7 +100,8 @@ abstract class BaseResponse
         return $this;
     }
 
-    public function withOutput(string $content):static{
+    public function withOutput(string $content): static
+    {
         $this->content = $content;
 
         return $this;

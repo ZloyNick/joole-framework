@@ -9,12 +9,11 @@ use joole\framework\Application;
 use joole\framework\component\BaseComponent;
 use joole\framework\exception\component\ComponentException;
 use joole\framework\exception\config\ComponentConfigurationException;
-use joole\framework\http\response\BaseResponse;
 use joole\framework\http\request\BaseUri;
-
+use joole\framework\http\response\BaseResponse;
 use function request;
-use function str_starts_with;
 use function str_ends_with;
+use function str_starts_with;
 
 /**
  * Class BaseRouter
@@ -62,6 +61,14 @@ class BaseRouter extends BaseComponent implements Router
         $actionParts = explode('/', $action);
         // First action (main).
         $mainAction = $actionParts[0];
+
+        // If action is one => registering action object.
+        if (count($actionParts) === 1) {
+            $actions[$mainAction] = ['runtime.' . $mainAction => new BaseAction($mainAction, $callback)];
+
+            return $actions[$mainAction]['runtime.' . $mainAction];
+        }
+
         // Last action key.
         $lastSubActionKey = count($actionParts) - 1;
 
@@ -143,28 +150,29 @@ class BaseRouter extends BaseComponent implements Router
         $route = $data[0];
 
         // If route not registered.
-        if(!isset($routes[$route])){
-            throw new ComponentException('Route with name '.$route.' not found!');
+        if (!isset($routes[$route])) {
+            throw new ComponentException('Route with name ' . $route . ' not found!');
         }
 
         $action = $routes[$route];
 
-        if(!isset($data[1])){
+        if (!isset($data[1])) {
             $data[1] = [];
         }
 
         return static::to([$action, $data[1]]);
     }
 
-    protected static function validateToArgs(array $data):void{
+    protected static function validateToArgs(array $data): void
+    {
         // Route is required param.
-        if(count($data) < 1 || !isset($data[0])){
+        if (count($data) < 1 || !isset($data[0])) {
             throw new ComponentException('Route can\'t be null!');
         }
 
         // Route must be a string.
-        if(!is_string($route = $data[0])){
-            throw new ComponentException('Given action or route param must be instance of string! '.gettype($route).' given.');
+        if (!is_string($route = $data[0])) {
+            throw new ComponentException('Given action or route param must be instance of string! ' . gettype($route) . ' given.');
         }
     }
 
@@ -178,12 +186,12 @@ class BaseRouter extends BaseComponent implements Router
         // query params
         $queryParams = [];
 
-        if(isset($data[1]) && is_array($data[1])){
+        if (isset($data[1]) && is_array($data[1])) {
             $queryParams = $data[1];
 
             foreach ($data[1] as $param => $value) {
-                if(is_string($param) && stripos($action, ':'.$param) !== false){
-                    $action = str_replace(':'.$param, (string)$value, $action);
+                if (is_string($param) && stripos($action, ':' . $param) !== false) {
+                    $action = str_replace(':' . $param, (string)$value, $action);
 
                     unset($queryParams[$param]);
                 }
@@ -284,6 +292,12 @@ class BaseRouter extends BaseComponent implements Router
         // Bind params from actions.
         $params = [];
 
+        if ($lastKey === 0) {
+            $mainAction = $actionParts[0];
+
+            return [$actions[$mainAction]['runtime.' . $mainAction], $params];
+        }
+
         foreach ($actionParts as $key => $part) {
             // If param not found in registered actions, it
             // may be bound param.
@@ -311,7 +325,7 @@ class BaseRouter extends BaseComponent implements Router
             // If current action given.
             if ($lastKey === $key) {
                 // If runtime path not existing.
-                if (!isset($actions['runtime.'.$part])) {
+                if (!isset($actions['runtime.' . $part])) {
                     throw new ComponentException('Class of action "' . $action . '" not found!');
                 }
 

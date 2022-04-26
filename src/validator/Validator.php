@@ -6,9 +6,14 @@ namespace joole\framework\validator;
 
 use JetBrains\PhpStorm\ArrayShape;
 use joole\framework\exception\validation\ValidationException;
-
 use joole\framework\http\file\UploadedFile;
-use function is_null, is_string, is_array, is_numeric, count, mb_strlen, sprintf;
+use function count;
+use function is_array;
+use function is_null;
+use function is_numeric;
+use function is_string;
+use function mb_strlen;
+use function sprintf;
 
 /**
  * The basic validator class.

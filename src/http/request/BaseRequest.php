@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace joole\framework\http\request;
 
 use function explode;
-use function str_starts_with;
 use function str_replace;
+use function str_starts_with;
 use function strtolower;
 use function substr;
 use function ucwords;

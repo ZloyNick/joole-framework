@@ -8,8 +8,8 @@ use joole\framework\component\BaseComponent;
 use joole\framework\component\ComponentInterface;
 use joole\framework\data\types\ImmutableArray;
 use joole\framework\exception\config\ConfigurationException;
-use joole\framework\http\response\Response;
 use joole\framework\http\request\Request;
+use joole\framework\http\response\Response;
 use joole\framework\routing\Router;
 use joole\reflector\object\ReflectedObject;
 use joole\reflector\Reflector;
@@ -21,9 +21,9 @@ use function in_array;
 use function is_file;
 use function microtime;
 use function round;
-use function substr;
 use function scan_dir;
 use function str_ends_with;
+use function substr;
 
 /**
  * The Application class is the entry point of a web application.
@@ -179,7 +179,8 @@ abstract class Application
      * @param array|null $default What will be returned if config with given name not found.
      * @return array|null
      */
-    final public function getConfig(string $configName, array|null $default = null):array|null{
+    final public function getConfig(string $configName, array|null $default = null): array|null
+    {
         return $this->configurations[$configName] ?? $default;
     }
 
@@ -214,7 +215,8 @@ abstract class Application
      * @param BaseComponent $component
      * @param array $config
      */
-    final public function registerComponent(BaseComponent $component, array $config = []){
+    final public function registerComponent(BaseComponent $component, array $config = [])
+    {
         $components = &$this->components;
 
         $component->init($config);
@@ -228,11 +230,25 @@ abstract class Application
      *
      * @param Router $router
      */
-    final public function setRouter(Router $router){
+    final public function setRouter(Router $router)
+    {
         $this->router = $router;
     }
 
-    final public function getRouter():Router{
+    /**
+     * Returns component by id.
+     *
+     * @param string $id Component id.
+     *
+     * @return ComponentInterface|null Returns null when component not found.
+     */
+    final public function getComponent(string $id): ?ComponentInterface
+    {
+        return $this->components[$id] ?? null;
+    }
+
+    final public function getRouter(): Router
+    {
         return $this->router;
     }
 
