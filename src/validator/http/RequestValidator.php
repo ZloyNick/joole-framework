@@ -10,9 +10,14 @@ use joole\framework\validator\Validator;
 /**
  * The request validator base.
  */
-abstract class RequestValidator extends Validator implements RequestValidatorInterface
+class RequestValidator extends Validator implements RequestValidatorInterface
 {
 
-    abstract public function response(): BaseResponse;
+    public function response(): BaseResponse{
+        return response()->asJson(
+            $errors = $this->getErrors(),
+            !empty($errors) ? 200 : 422
+        );
+    }
 
 }

@@ -7,6 +7,7 @@ namespace joole\framework;
 use joole\framework\component\BaseComponent;
 use joole\framework\component\ComponentInterface;
 use joole\framework\data\types\ImmutableArray;
+use joole\framework\exception\component\ComponentException;
 use joole\framework\exception\config\ConfigurationException;
 use joole\framework\http\request\Request;
 use joole\framework\http\response\Response;
@@ -247,6 +248,11 @@ abstract class Application
         return $this->components[$id] ?? null;
     }
 
+    /**
+     * Returns application's router.
+     *
+     * @return Router
+     */
     final public function getRouter(): Router
     {
         return $this->router;

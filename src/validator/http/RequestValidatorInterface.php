@@ -17,6 +17,8 @@ interface RequestValidatorInterface
     /**
      * Response for http request.
      *
+     * This method MUST return errors.
+     *
      * @return BaseResponse
      */
     public function response(): BaseResponse;
