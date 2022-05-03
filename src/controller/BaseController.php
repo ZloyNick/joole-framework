@@ -7,8 +7,6 @@ namespace joole\framework\controller;
 use joole\framework\http\request\BaseRequest;
 use joole\framework\http\response\BaseResponse;
 use joole\framework\routing\ActionInterface;
-use joole\framework\view\BaseView;
-use joole\framework\view\ViewInterface;
 
 /**
  * The basic controller.
@@ -19,12 +17,12 @@ class BaseController implements ControllerInterface
 {
 
     protected BaseRequest $request;
-    private ViewInterface $view;
+    protected array $_additionalCss = [];
+    protected array $_additionalJs = [];
 
     public function __construct(protected readonly ActionInterface $action)
     {
         $this->request = request();
-        $this->view = new BaseView();
     }
 
     public function beforeAction(string $method): void
@@ -46,16 +44,6 @@ class BaseController implements ControllerInterface
     }
 
     /**
-     * Returns view of current action.
-     *
-     * @return ViewInterface
-     */
-    public function getView(): ViewInterface
-    {
-        return $this->view;
-    }
-
-    /**
      * Adds js code to view.
      *
      * @param string $jsContent
@@ -65,7 +53,7 @@ class BaseController implements ControllerInterface
      */
     public function setJS(string $jsContent): void
     {
-        $this->view->renderJs($jsContent);
+        $this->_additionalJs[] = $jsContent;
     }
 
     /**
@@ -78,7 +66,7 @@ class BaseController implements ControllerInterface
      */
     public function setCSS(string $cssContent): void
     {
-        $this->view->renderCss($cssContent);
+        $this->_additionalCss[] = $cssContent;
     }
 
     /**
@@ -90,14 +78,18 @@ class BaseController implements ControllerInterface
      * @return string
      *
      * @throws \joole\framework\exception\view\RendererException
-     * @throws \joole\framework\exception\view\ViewException
      *
      * @see ViewInterface::renderFile()
      */
     public function render(string $view, array $params = []): BaseResponse
     {
+        $viewObject = app()->getRenderer()->renderView($view.'.php', $params);
+
+        $viewObject->renderJs(implode(PHP_EOL, $this->_additionalJs));
+        $viewObject->renderCss(implode(PHP_EOL, $this->_additionalCss));
+
         return response()->withOutput(
-            $this->view->renderFile($view . '.php', $params)
+            $viewObject->__toString()
         );
     }
 

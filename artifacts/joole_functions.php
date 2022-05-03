@@ -55,6 +55,8 @@ function response(): BaseResponse
 /**
  * Converts memory size to string.
  *
+ * @todo Converter as helper.
+ *
  * @param int $bytesCount
  * @return string
  */
