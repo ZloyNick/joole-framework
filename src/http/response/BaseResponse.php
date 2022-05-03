@@ -114,4 +114,24 @@ abstract class BaseResponse
         return $this->content;
     }
 
+    /**
+     * Sets json format for response.
+     *
+     * @param array $data Data.
+     * @param int $code Http code.
+     *
+     * @return static
+     */
+    abstract public function asJson(array $data, int $code):static;
+
+    /**
+     * Returns file.
+     *
+     *
+     *
+     * @param string $filePath
+     * @return $this
+     */
+    abstract public function asFile(string $filePath):static;
+
 }

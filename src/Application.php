@@ -7,16 +7,15 @@ namespace joole\framework;
 use joole\framework\component\BaseComponent;
 use joole\framework\component\ComponentInterface;
 use joole\framework\data\types\ImmutableArray;
-use joole\framework\exception\component\ComponentException;
 use joole\framework\exception\config\ConfigurationException;
 use joole\framework\http\request\Request;
 use joole\framework\http\response\Response;
 use joole\framework\routing\Router;
+use joole\framework\content\renderer\RendererInterface;
 use joole\reflector\object\ReflectedObject;
 use joole\reflector\Reflector;
 use function array_diff;
 use function constant;
-use function define;
 use function defined;
 use function in_array;
 use function is_file;
@@ -69,7 +68,19 @@ abstract class Application
      */
     private ImmutableArray $configurations;
 
+    /**
+     * Application router.
+     *
+     * @var Router
+     */
     private Router $router;
+
+    /**
+     * The view renderer. Using for
+     *
+     * @var RendererInterface|null
+     */
+    private ?RendererInterface $renderer;
 
     /**
      * Required configurations.
@@ -96,11 +107,7 @@ abstract class Application
      */
     public function init(): void
     {
-        $startInitTime = microtime(true);
-
         $this->loadConfigurations();
-
-        define('INIT_TIME', round(microtime(true) - $startInitTime, 7));
     }
 
     /**
@@ -256,6 +263,31 @@ abstract class Application
     final public function getRouter(): Router
     {
         return $this->router;
+    }
+
+    /**
+     * Sets renderer.
+     *
+     * $rendererClass must be instance of \joole\framework\view\renderer\RendererInterface,
+     * it's very important!
+     *
+     * @param RendererInterface|string $rendererClass Class of renderer as string or object
+     * @throws \joole\framework\exception\view\ViewException Will thrown if given class as string
+     * is not subclass of \joole\framework\view\renderer\RendererInterface
+     */
+    final public function setRenderer(RendererInterface $renderer): void
+    {
+        $this->renderer = $renderer;
+    }
+
+    /**
+     * Returns application views renderer.
+     *
+     * @return RendererInterface|null
+     */
+    final public function getRenderer(): ?RendererInterface
+    {
+        return $this->renderer;
     }
 
 }

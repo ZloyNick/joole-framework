@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace joole\framework\view;
+namespace joole\framework\content\renderer\view;
 
 use joole\framework\assets\ResourceInterface;
-use joole\framework\view\renderer\RendererInterface;
+use joole\framework\content\renderer\RendererInterface;
 
 /**
  * A basic view interface.
@@ -16,37 +16,23 @@ interface ViewInterface
 {
 
     /**
+     * @param RendererInterface $renderer
+     */
+    public function __construct(RendererInterface $renderer);
+
+    /**
      * Returns Renderer for view files.
      *
-     * @return \joole\framework\view\renderer\RendererInterface
+     * @return RendererInterface
      */
     public function getRenderer(): RendererInterface;
 
     /**
-     * Sets renderer.
-     *
-     * $rendererClass must be instance of \joole\framework\view\renderer\RendererInterface,
-     * it's very important!
-     *
-     * @param RendererInterface|string $rendererClass Class of renderer as string or object
-     * @throws \joole\framework\exception\view\ViewException Will thrown if given class as string
-     * is not subclass of \joole\framework\view\renderer\RendererInterface
-     *
-     */
-    public static function setRenderer(RendererInterface|string $rendererClass): void;
-
-    /**
-     * Renders given file content.
-     *
-     * @param string $file File full path.
-     * @param array $params Variables for view.
+     * Returns combined content of view
      *
      * @return string
-     *
-     * @throws \joole\framework\exception\view\ViewException Will thrown if file not exist.
-     * @throws \joole\framework\exception\view\RendererException Will thrown on content render error.
      */
-    public function renderFile(string $file, array $params = []): string;
+    public function __toString(): string;
 
     /**
      * Includes given css file content.
@@ -103,5 +89,22 @@ interface ViewInterface
      * @return mixed
      */
     public function applyResources(ResourceInterface ...$resources): void;
+
+    /**
+     * Returns "View" object with set file.
+     *
+     * @param string $file
+     * @return static
+     */
+    public function withFile(string $file): static;
+
+    /**
+     * Returns View instance with variables, that as used at given view file.
+     *
+     * @param array $params Array of variables for view.
+     *
+     * @return static
+     */
+    public function withParams(array $params):static;
 
 }
